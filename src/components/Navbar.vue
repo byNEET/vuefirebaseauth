@@ -19,11 +19,16 @@
           <template v-if="user.loggedIn">
             <div class="nav-item">{{ user.data.displayName }}</div>
             <li class="nav-item">
-              <a class="nav-link" @click.prevent="signOut"></a>
+              <a class="nav-link" @click.prevent="signOut">signOut</a>
             </li>
           </template>
           <template v-else>
-            
+            <li class="nav-item">
+              <router-link to="login" class="nav-link">Login</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="register" class="nav-link">Register</router-link>
+            </li>
           </template>
         </ul>
       </div>
@@ -32,8 +37,29 @@
 </template>
 
 <script>
-export default {
+import {mapGetters} from 'vuex'
+import firebase from 'firebase/app'
+import 'firebase/database'
+import 'firebase/auth'
 
+export default {
+  computed:{
+    ...mapGetters({
+      // map this.user to this.$store.getters.user
+      user:"user"
+    })
+  },
+  methods:{
+    signOut(){
+      firebase.auth()
+        .signOut()
+        .then(()=>{
+          this.$router.replace({
+            name: "home"
+          })
+        })
+    }
+  }
 }
 </script>
 
